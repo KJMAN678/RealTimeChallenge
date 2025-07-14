@@ -5,18 +5,18 @@ async function runMultiUserChatTest() {
   console.log('🚀 Starting Multi-User Chat Test...');
   
   const browser1 = await puppeteer.launch({ 
-    headless: false, 
-    args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    headless: true, 
+    args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'],
     defaultViewport: { width: 1200, height: 800 }
   });
   const browser2 = await puppeteer.launch({ 
-    headless: false, 
-    args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    headless: true, 
+    args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'],
     defaultViewport: { width: 1200, height: 800 }
   });
   const browser3 = await puppeteer.launch({ 
-    headless: false, 
-    args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    headless: true, 
+    args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'],
     defaultViewport: { width: 1200, height: 800 }
   });
 
@@ -27,10 +27,12 @@ async function runMultiUserChatTest() {
 
     console.log('📱 Opening browsers and navigating to chat app...');
     await Promise.all([
-      page1.goto('http://localhost:3000'),
-      page2.goto('http://localhost:3000'),
-      page3.goto('http://localhost:3000')
+      page1.goto('http://localhost:3000', { waitUntil: 'networkidle2' }),
+      page2.goto('http://localhost:3000', { waitUntil: 'networkidle2' }),
+      page3.goto('http://localhost:3000', { waitUntil: 'networkidle2' })
     ]);
+    
+    await new Promise(resolve => setTimeout(resolve, 3000));
 
     console.log('🔌 Testing WebSocket chat with multiple users...');
     await testWebSocketChat(page1, page2, page3);
@@ -72,10 +74,23 @@ async function testWebSocketChat(page1, page2, page3) {
   ]);
 
   console.log('⏳ Waiting for WebSocket connections...');
+  
+  const page1Text = await page1.evaluate(() => document.body.textContent);
+  console.log('🔍 Page 1 text content:', page1Text.substring(0, 500));
+  
   await Promise.all([
-    page1.waitForFunction(() => document.body.textContent.includes('Connected'), { timeout: 10000 }),
-    page2.waitForFunction(() => document.body.textContent.includes('Connected'), { timeout: 10000 }),
-    page3.waitForFunction(() => document.body.textContent.includes('Connected'), { timeout: 10000 })
+    page1.waitForFunction(() => {
+      const text = document.body.textContent || '';
+      return text.includes('Connected') && !text.includes('Disconnected');
+    }, { timeout: 20000 }),
+    page2.waitForFunction(() => {
+      const text = document.body.textContent || '';
+      return text.includes('Connected') && !text.includes('Disconnected');
+    }, { timeout: 20000 }),
+    page3.waitForFunction(() => {
+      const text = document.body.textContent || '';
+      return text.includes('Connected') && !text.includes('Disconnected');
+    }, { timeout: 20000 })
   ]);
 
   await page1.evaluate(() => {
@@ -135,6 +150,7 @@ async function testWebSocketChat(page1, page2, page3) {
 }
 
 async function testSSEChat(page1, page2, page3) {
+  console.log('📡 Clicking SSE Only buttons...');
   await Promise.all([
     page1.evaluate(() => {
       const btn = Array.from(document.querySelectorAll('button')).find(b => b.textContent.includes('SSE Only'));
@@ -150,12 +166,25 @@ async function testSSEChat(page1, page2, page3) {
     })
   ]);
 
+  await new Promise(resolve => setTimeout(resolve, 2000));
+
   console.log('⏳ Waiting for SSE connections...');
   await Promise.all([
-    page1.waitForFunction(() => document.body.textContent.includes('Connected'), { timeout: 10000 }),
-    page2.waitForFunction(() => document.body.textContent.includes('Connected'), { timeout: 10000 }),
-    page3.waitForFunction(() => document.body.textContent.includes('Connected'), { timeout: 10000 })
+    page1.waitForFunction(() => {
+      const text = document.body.textContent || '';
+      return text.includes('Connected') && !text.includes('Disconnected');
+    }, { timeout: 20000 }),
+    page2.waitForFunction(() => {
+      const text = document.body.textContent || '';
+      return text.includes('Connected') && !text.includes('Disconnected');
+    }, { timeout: 20000 }),
+    page3.waitForFunction(() => {
+      const text = document.body.textContent || '';
+      return text.includes('Connected') && !text.includes('Disconnected');
+    }, { timeout: 20000 })
   ]);
+  
+  console.log('✅ SSE connections established!');
 
   await page1.evaluate(() => {
     const input = document.querySelector('input[placeholder="Your username"]');
