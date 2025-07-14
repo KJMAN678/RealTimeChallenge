@@ -1,0 +1,166 @@
+.chatContainer {
+  display: flex;
+  flex-direction: column;
+  height: 500px;
+  border: 1px solid var(--gray-alpha-200);
+  border-radius: 8px;
+  background: var(--background);
+  overflow: hidden;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background: var(--gray-alpha-100);
+  border-bottom: 1px solid var(--gray-alpha-200);
+}
+
+.connectionStatus {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.statusDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.connected {
+  background-color: #22c55e;
+}
+
+.disconnected {
+  background-color: #ef4444;
+}
+
+.delay {
+  font-size: 12px;
+  color: var(--gray-600);
+  background: var(--gray-alpha-100);
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.userInput {
+  padding: 8px 16px;
+  border-bottom: 1px solid var(--gray-alpha-200);
+}
+
+.usernameInput {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid var(--gray-alpha-200);
+  border-radius: 4px;
+  background: var(--background);
+  color: var(--foreground);
+  font-size: 14px;
+}
+
+.usernameInput:focus {
+  outline: none;
+  border-color: #3b82f6;
+}
+
+.messagesContainer {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.message {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.messageHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.username {
+  font-weight: 600;
+  color: #3b82f6;
+  font-size: 14px;
+}
+
+.timestamp {
+  font-size: 12px;
+  color: var(--gray-600);
+}
+
+.messageContent {
+  padding: 8px 12px;
+  background: var(--gray-alpha-100);
+  border-radius: 8px;
+  word-wrap: break-word;
+  line-height: 1.4;
+}
+
+.inputContainer {
+  display: flex;
+  gap: 8px;
+  padding: 16px;
+  border-top: 1px solid var(--gray-alpha-200);
+  background: var(--gray-alpha-100);
+}
+
+.messageInput {
+  flex: 1;
+  padding: 12px;
+  border: 1px solid var(--gray-alpha-200);
+  border-radius: 6px;
+  background: var(--background);
+  color: var(--foreground);
+  font-size: 14px;
+}
+
+.messageInput:focus {
+  outline: none;
+  border-color: #3b82f6;
+}
+
+.messageInput:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.sendButton {
+  padding: 12px 20px;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.sendButton:hover:not(:disabled) {
+  background: #2563eb;
+}
+
+.sendButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+@media (prefers-color-scheme: dark) {
+  .delay {
+    color: #9ca3af;
+  }
+  
+  .timestamp {
+    color: #9ca3af;
+  }
+}
