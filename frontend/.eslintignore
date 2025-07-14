@@ -1,0 +1,30 @@
+# Next.js build outputs
+.next/
+out/
+dist/
+build/
+
+# Dependencies
+node_modules/
+
+# Deployment
+.vercel/
+
+# Environment variables
+.env*
+
+# Config files
+next.config.*
+*.config.js
+*.config.ts
+
+# TypeScript generated files
+*.tsbuildinfo
+next-env.d.ts
+
+# Logs
+*.log
+
+# OS generated files
+.DS_Store
+Thumbs.db 

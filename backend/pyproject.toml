@@ -1,0 +1,25 @@
+[project]
+name = "fe-nextjs-be-django"
+version = "0.1.0"
+description = "FE Next.js BE Django"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "Django==5.2.4",
+    "psycopg2-binary==2.9.10",
+    "django-ninja==1.4.3",
+    "Markdown==3.8",
+    "django-filter==25.1",
+    "django-cors-headers==4.7.0"
+]
+
+[tool.uv]
+link-mode = "copy"
+dev-dependencies = [
+    "ruff==0.12.2",
+    "pytest==8.4.1",
+    "tox==4.26.0",
+    "django-debug-toolbar==5.2.0",
+    "pytest-django==4.11.1",
+    "factory-boy==3.3.3",
+]
