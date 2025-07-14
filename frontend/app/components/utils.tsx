@@ -6,6 +6,8 @@ export function formatDate(dateString: string): string {
       day: 'numeric',
       hour: '2-digit',
       minute: '2-digit',
+      second: '2-digit',
+      fractionalSecondDigits: 3,
       timeZone: 'Asia/Tokyo'
     }).format(date);
   }
