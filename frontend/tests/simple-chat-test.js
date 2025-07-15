@@ -1,4 +1,4 @@
-const puppeteer = require('puppeteer');
+const { chromium, firefox, webkit } = require('playwright');
 
 const messageTemplates = [
   "こんにちは！今日はいい天気ですね",
@@ -20,20 +20,22 @@ function getRandomMessage() {
 }
 
 async function runSimpleChatTest() {
-  console.log('🚀 Starting Visual Chat Test...');
-  console.log('📱 Opening visible browser to demonstrate chat functionality');
+  console.log('🚀 Starting Visual Chat Test with Playwright Firefox...');
+  console.log('🦊 Opening Firefox browser to demonstrate chat functionality');
   
-  const browser = await puppeteer.launch({ 
+  const browser = await firefox.launch({ 
     headless: true,  // Use headless mode for Docker compatibility
-    args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'],
-    defaultViewport: { width: 1200, height: 800 }
+    args: ['--no-sandbox']
   });
 
   try {
-    const page = await browser.newPage();
+    const context = await browser.newContext({
+      viewport: { width: 1200, height: 800 }
+    });
+    const page = await context.newPage();
 
     console.log('📱 Opening chat application...');
-    await page.goto('http://localhost:3000', { waitUntil: 'networkidle2' });
+    await page.goto('http://frontend:3000', { waitUntil: 'networkidle' });
     
     await new Promise(resolve => setTimeout(resolve, 3000));
 
@@ -90,7 +92,7 @@ async function runSimpleChatTest() {
 
     console.log('💬 Testing automated message generation...');
     try {
-      await page.type('input[placeholder="Your username"]', 'AutoTestUser');
+      await page.fill('input[placeholder="Your username"]', 'AutoTestUser');
       
       if (sseConnectionCheck) {
         console.log('🎭 Generating realistic chat messages via SSE...');
@@ -102,7 +104,7 @@ async function runSimpleChatTest() {
             if (input) input.value = '';
           });
           
-          await page.type('input[placeholder="Type your message..."]', message);
+          await page.fill('input[placeholder="Type your message..."]', message);
           
           await page.evaluate(() => {
             const btn = Array.from(document.querySelectorAll('button')).find(b => b.textContent.includes('Send'));

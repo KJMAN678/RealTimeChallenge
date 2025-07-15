@@ -1,4 +1,4 @@
-const puppeteer = require('puppeteer');
+const { firefox } = require('playwright');
 
 const messageTemplates = [
   "こんにちは！今日はいい天気ですね",
@@ -29,25 +29,30 @@ function getRandomUsername() {
 }
 
 async function runVisualChatDemo() {
-  console.log('🚀 Starting Visual Chat Demo...');
-  console.log('📱 This will open visible browser windows to demonstrate chat functionality');
+  console.log('🚀 Starting Visual Chat Demo with Playwright Firefox...');
+  console.log('🦊 This will open visible Firefox browser windows to demonstrate chat functionality');
   
   const browsers = [];
+  const contexts = [];
   const pages = [];
   
   for (let i = 0; i < 3; i++) {
-    const browser = await puppeteer.launch({ 
-      headless: false,  // Make browsers visible
-      args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'],
-      defaultViewport: { width: 800, height: 600 }
+    const browser = await firefox.launch({ 
+      headless: process.env.CI || process.env.DOCKER ? true : false,  // Headless in CI/Docker, visible locally
+      args: ['--no-sandbox']
     });
     browsers.push(browser);
     
-    const page = await browser.newPage();
+    const context = await browser.newContext({
+      viewport: { width: 800, height: 600 }
+    });
+    contexts.push(context);
+    
+    const page = await context.newPage();
     pages.push(page);
     
-    console.log(`📱 Opening browser ${i + 1}...`);
-    await page.goto('http://localhost:3000', { waitUntil: 'networkidle2' });
+    console.log(`🦊 Opening Firefox browser ${i + 1}...`);
+    await page.goto('http://frontend:3000', { waitUntil: 'networkidle' });
     await new Promise(resolve => setTimeout(resolve, 2000));
   }
 
@@ -70,7 +75,7 @@ async function runVisualChatDemo() {
         const input = document.querySelector('input[placeholder="Your username"]');
         if (input) input.value = '';
       });
-      await pages[i].type('input[placeholder="Your username"]', username);
+      await pages[i].fill('input[placeholder="Your username"]', username);
       console.log(`👤 Browser ${i + 1} username set to: ${username}`);
     }
     
@@ -102,7 +107,7 @@ async function runVisualChatDemo() {
                 if (input) input.value = '';
               });
               
-              await pages[i].type('input[placeholder="Type your message..."]', message);
+              await pages[i].fill('input[placeholder="Type your message..."]', message);
               
               await pages[i].evaluate(() => {
                 const btn = Array.from(document.querySelectorAll('button')).find(b => b.textContent.includes('Send'));
