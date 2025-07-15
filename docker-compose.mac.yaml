@@ -1,5 +1,6 @@
 services:
   frontend:
+    platform: linux/arm64
     build:
       context: ./frontend
       dockerfile: Dockerfile.mac
