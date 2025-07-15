@@ -55,7 +55,12 @@ export default function WebSocketChat() {
             setLastDelay(delay);
           }
           
-          setMessages(prev => [...prev, message]);
+          setMessages(prev => {
+            if (!prev.some(msg => msg.timestamp === message.timestamp && msg.username === message.username && msg.content === message.content)) {
+              return [...prev, message];
+            }
+            return prev;
+          });
         }
       };
 
@@ -127,8 +132,8 @@ export default function WebSocketChat() {
       </div>
 
       <div className={styles.messagesContainer}>
-        {messages.map((message, index) => (
-          <div key={index} className={styles.message}>
+        {messages.map((message) => (
+          <div key={`${message.timestamp}-${message.username}-${message.content}`} className={styles.message}>
             <div className={styles.messageHeader}>
               <span className={styles.username}>{message.username}</span>
               <span className={styles.timestamp}>

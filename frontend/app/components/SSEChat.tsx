@@ -43,6 +43,11 @@ export default function SSEChat() {
 
       eventSource.onmessage = (event) => {
         const data = JSON.parse(event.data);
+        
+        if (data.type === 'connected' || !data.id) {
+          return;
+        }
+        
         const message: Message = {
           id: data.id,
           content: data.content,

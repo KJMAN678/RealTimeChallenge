@@ -24,9 +24,11 @@ export DJANGO_SUPERUSER_USERNAME=hoge
 export DJANGO_SUPERUSER_EMAIL=hoge@test.com
 export DJANGO_SUPERUSER_PASSWORD=hogehoge
 export DJANGO_SECRET_KEY=hogehoge
-export POSTGRES_DB=hoge
+export POSTGRES_DB=db
 export POSTGRES_USER=hoge
 export POSTGRES_PASSWORD=hogehoge
+export POSTGRES_HOST=hoge
+export POSTGRES_PORT=hoge
 
 # 環境変数を読み込む
 $ direnv allow

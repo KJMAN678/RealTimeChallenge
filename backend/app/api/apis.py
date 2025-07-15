@@ -80,9 +80,25 @@ async def sse_stream():
 
 
 @csrf_exempt
-async def sse_endpoint(request):
+def sse_endpoint(request):
+    def simple_sse_stream():
+        yield f"data: {json.dumps({'type': 'connected', 'message': 'SSE connection established'})}\n\n".encode('utf-8')
+        
+        messages = ChatMessage.objects.all().order_by('-id')[:10]
+        
+        for message in reversed(messages):
+            data = {
+                "id": message.id,
+                "content": message.content,
+                "username": message.username,
+                "timestamp": message.timestamp.isoformat(),
+                "client_timestamp": message.client_timestamp,
+                "server_timestamp": int(timezone.now().timestamp() * 1000)
+            }
+            yield f"data: {json.dumps(data)}\n\n".encode('utf-8')
+
     response = StreamingHttpResponse(
-        sse_stream(),
+        simple_sse_stream(),
         content_type='text/event-stream'
     )
     response['Cache-Control'] = 'no-cache'
