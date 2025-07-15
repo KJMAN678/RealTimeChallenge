@@ -1,3 +1,10 @@
+### SSE のテスト
+
+```sh
+$ docker compose -f docker-compose.mac.yaml exec frontend node tests/simple-chat-test.js
+$ docker compose -f docker-compose.mac.yaml exec frontend node tests/visual-chat-demo.js
+```
+
 ### Devin
 
 - [Devin's Machine](https://app.devin.ai/workspace) でリポジトリ追加
@@ -36,7 +43,7 @@ $ brew install direnv
 # ローカルM1Mac用
 $ docker compose -f docker-compose.mac.yaml up -d
 # Devin用
-$ docker compose -f docker-compose.ubuntu.yaml up -d
+$ docker compose -f docker-compose.ubuntu.yaml up -d`
 
 # コンテナ作り直し
 $ ./remake-container.sh mac

@@ -1,0 +1,12 @@
+{
+  "name": "chat-test-runner",
+  "version": "1.0.0",
+  "description": "Multi-user chat testing script",
+  "scripts": {
+    "test:multi-user": "node tests/multi-user-chat.spec.ts",
+    "install-test-deps": "npm install puppeteer"
+  },
+  "dependencies": {
+    "puppeteer": "^21.0.0"
+  }
+}
